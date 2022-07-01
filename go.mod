@@ -1,3 +1,3 @@
-module github.com/Shell-Company/gpt3client
+module github.com/louisbarrett/gpt3client
 
 go 1.15

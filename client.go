@@ -33,10 +33,10 @@ type response struct {
 	} `json:"choices"`
 }
 
-func init(){
+func init() {
 	if apiKey == "" {
 		fmt.Println("Please set API key via OPEN_AI_APIKEY variable")
-		os.Exit(1)	
+		os.Exit(1)
 	}
 }
 
@@ -72,14 +72,19 @@ func SendOpenAIPrompt(prompt string) (outputResponse string, newContent string) 
 		panic(err)
 	}
 	defer resp.Body.Close()
-
+	if resp.StatusCode != 200 {
+		panic(fmt.Sprintf("Status code is %d", resp.StatusCode))
+	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
 
 	var response response
-	json.Unmarshal(responseBody, &response)
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		panic(err)
+	}
 
 	outputResponse = prompt
 	for _, choice := range response.Choices {
